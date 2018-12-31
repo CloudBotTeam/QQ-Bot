@@ -1,5 +1,6 @@
 import os
 import configparser
+import random
 
 import docker
 
@@ -19,7 +20,8 @@ COOLQ_ACCOUNT: str = "COOLQ_ACCOUNT"
 if __name__ == '__main__':
     try:
         # 获得环境变量的 上报地址
-        post_url: str = os.environ.get(CQHTTP_POST_URL, "http://10.0.0.229:8083/event")
+        random_port = random.randint(9005, 20000)
+        post_url: str = os.environ.get(CQHTTP_POST_URL, "http://10.0.0.229:8101")
         # 跑到的 account
         coolq_account: str = os.environ.get(COOLQ_ACCOUNT, "3187545268")
         # 事件接收的端口
@@ -27,7 +29,7 @@ if __name__ == '__main__':
         expose_login_port: int = int(os.environ.get("EXPOSE_LOGIN_PORT", "9005"))
         # 心跳 相关的事件
         enable_heart_beat = bool(os.environ.get("ENABLE_HEART_BEAT", "true"))
-        heartbeat_interval = int(os.environ.get("HEARTBEAT_INTERVAL", "5000"))
+        heartbeat_interval = int(os.environ.get("HEARTBEAT_INTERVAL", "15000"))
 
         pwd = os.getcwd()
 
@@ -67,7 +69,8 @@ if __name__ == '__main__':
                                             "bind": "/home/user/coolq",
                                             "mode": "rw",
                                         },
-                                     }, detach=True, network='robot-network')
+                                     }, detach=True)
+        # client.networks.get('staticnet').connect(resp, ipv4_address="192.168.50.100")
         try:
             for line in resp.logs(stream=True):
                 line = line.strip()
