@@ -1,4 +1,4 @@
-FROM python:3.7.2
+FROM python:3.7-alpine
 
 MAINTAINER anmmscs_mwish@qq.com
 

@@ -81,7 +81,12 @@ def build_docker(serv_addr: str):
                                      "9000/tcp": expose_login_port,
                                  }, environment=env_dict,
                                  detach=True, network='cloud-bot-network')
-    docker_ip = client.api.inspect_container(resp.id)['NetworkSettings']['IPAddress']
+    docker_inspect = client.api.inspect_container(resp.id)
+    docker_ip = docker_inspect['NetworkSettings']['IPAddress']
+    if docker_ip is None or not docker_ip:
+        # print(docker_inspect['NetworkSettings'])
+        docker_ip = docker_inspect['NetworkSettings']['Networks']['cloud-bot-network']['IPAddress']
+    # print(docker_inspect)
     docker_name = resp.name
     # docker name
 
