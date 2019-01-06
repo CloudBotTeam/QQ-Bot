@@ -20,16 +20,18 @@ COOLQ_ACCOUNT: str = "COOLQ_ACCOUNT"
 client = docker.from_env()
 
 
-def build_docker(serv_addr: str):
-    http_serv_addr = "http://" + serv_addr
+def build_docker(serv_addr: str, serv_port: int):
+    http_serv_addr = f"http://{serv_addr}:{serv_port}"
     ws_serv_addr = "ws://" + serv_addr
     # 获得环境变量的 上报地址
     random_port = random.randint(9005, 20000)
-    post_url: str = os.environ.get(CQHTTP_POST_URL, http_serv_addr)
+
     # 跑到的 account
     coolq_account: str = os.environ.get(COOLQ_ACCOUNT, "")
     # 事件接收的端口
     event_recv_port: int = int(os.environ.get("EVENT_RECV_PORT", "5700"))
+    post_url: str = os.environ.get(CQHTTP_POST_URL, http_serv_addr)
+
     expose_login_port: int = random_port
     # 心跳 相关的事件
     enable_heart_beat = bool(os.environ.get("ENABLE_HEART_BEAT", "true"))
