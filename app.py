@@ -15,8 +15,8 @@ def get_containers():
 
 @app.route("/create")
 def add_account():
-    ip, cid, name, expose_login_port = build_docker('bot-manager', 8101)
-    app_map[str(cid)] = (ip, cid, name, expose_login_port)
+    ip, cid, name, expose_login_port, resp = build_docker('bot-manager', 8101)
+    app_map[str(cid)] = (ip, cid, name, expose_login_port, resp)
     return jsonify({
         'ip': ip,
         'container_name': name,
@@ -26,9 +26,9 @@ def add_account():
     })
 
 
-@app.route("/delete/<container_id>")
+@app.route("/delete/<container_id>", methods=['DELETE'])
 def destroy(container_id):
-    resp = app_map[str(container_id)]
+    ip, cid, name, expose_login_port, resp = app_map[str(container_id)]
     resp.stop()
 
 

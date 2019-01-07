@@ -92,7 +92,7 @@ def build_docker(serv_addr: str, serv_port: int):
     docker_name = resp.name
     # docker name
 
-    return docker_ip, resp.id, docker_name, random_port
+    return docker_ip, resp.id, docker_name, random_port, resp
 
 
 __all__ = ["build_docker", "client"]
