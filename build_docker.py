@@ -20,7 +20,23 @@ COOLQ_ACCOUNT: str = "COOLQ_ACCOUNT"
 client = docker.from_env()
 
 
-def build_docker(serv_addr: str, serv_port: int):
+def build_docker_wechat(serv_addr: str, serv_port: int):
+    # os.system("mkdir {new_dir} ; cp -a ./coolq {new_dir}".format(new_dir=random_port))
+    resp = client.containers.run("wechatbot",
+                                 detach=True, network='cloud-bot-network')
+    docker_inspect = client.api.inspect_container(resp.id)
+    docker_ip = docker_inspect['NetworkSettings']['IPAddress']
+    if docker_ip is None or not docker_ip:
+        # print(docker_inspect['NetworkSettings'])
+        docker_ip = docker_inspect['NetworkSettings']['Networks']['cloud-bot-network']['IPAddress']
+    # print(docker_inspect)
+    docker_name = resp.name
+    # docker name
+
+    return docker_ip, resp.id, docker_name, 0, resp
+
+
+def build_docker_qq(serv_addr: str, serv_port: int):
     http_serv_addr = f"http://{serv_addr}:{serv_port}"
     ws_serv_addr = "ws://" + serv_addr
     # 获得环境变量的 上报地址
